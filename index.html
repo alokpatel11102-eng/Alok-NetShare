@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alok NetShare</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f0f4ff;
+    color: #172554;
+}
+header {
+    background: #155eef;
+    color: white;
+    padding: 25px 15px;
+    text-align: center;
+    border-radius: 0 0 25px 25px;
+}
+header h1 {
+    margin: 0;
+}
+header p {
+    margin-bottom: 0;
+}
+.container {
+    padding: 20px;
+    max-width: 450px;
+    margin: auto;
+}
+.card {
+    background: white;
+    padding: 22px;
+    margin: 18px 0;
+    border-radius: 18px;
+    box-shadow: 0 4px 15px #00000010;
+}
+button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 12px;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    background: #155eef;
+    font-size: 16px;
+    font-weight: bold;
+}
+.receive {
+    background: #059669;
+}
+input {
+    width: 100%;
+    padding: 13px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 15px;
+}
+.hidden {
+    display: none;
+}
+#status {
+    color: #047857;
+    overflow-wrap: anywhere;
+}
+footer {
+    text-align: center;
+    color: #64748b;
+    padding: 20px;
+    font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>📡 Alok NetShare</h1>
+    <p>Connect • Share • Stay Connected</p>
+</header>
+
+<div class="container">
+
+    <div class="card" id="home">
+        <h2>Welcome 👋</h2>
+        <p>Choose what you want to do.</p>
+
+        <button onclick="showPage('send')">
+            📤 SEND INTERNET
+        </button>
+
+        <button class="receive"
+        onclick="showPage('receive')">
+            📥 RECEIVE INTERNET
+        </button>
+    </div>
+
+    <div class="card hidden" id="send">
+        <h2>📤 Send Internet</h2>
+        <p>Keep mobile data ON to prepare your sharing session.</p>
+
+        <label>Create a sharing password</label>
+        <input id="sendPassword"
+        type="password" placeholder="Create password">
+
+        <button onclick="startSharing()">
+            Start Sharing
+        </button>
+
+        <div id="shareInfo" class="hidden">
+            <h3>Your Sharing Code</h3>
+            <div id="shareCode"></div>
+            <p>Share this code with the receiver.</p>
+            <p id="status"></p>
+        </div>
+
+        <button onclick="showPage('home')">
+            ← Back
+        </button>
+    </div>
+
+    <div class="card hidden" id="receive">
+        <h2>📥 Receive Internet</h2>
+
+        <label>Scan QR or select its image</label>
+        <input id="qrFile" type="file"
+        accept="image/*">
+
+        <button onclick="scanQR()">
+            🖼️ Read QR from Gallery
+        </button>
+
+        <div id="qrResult" class="hidden">
+            <label>Sharing Code</label>
+            <input id="receivedCode"
+            placeholder="Enter sharing code">
+
+            <label>Password</label>
+            <input id="receivePassword"
+            type="password" placeholder="Enter password">
+
+            <button class="receive"
+            onclick="connectDevice()">
+                Connect
+            </button>
+        </div>
+
+        <p id="receiveStatus"></p>
+
+        <button onclick="showPage('home')">
+            ← Back
+        </button>
+    </div>
+
+    <div class="card">
+        <h3>📊 Data Usage</h3>
+        <p>Connected devices: <b id="devices">0</b></p>
+        <p>Data used: <b id="dataUsed">0 MB</b></p>
+        <small>Live data sharing is not enabled yet.</small>
+    </div>
+
+</div>
+
+<footer>
+    Alok NetShare © 2026
+</footer>
+
+<script>
+function showPage(page) {
+    document.getElementById('home').classList.add('hidden');
+    document.getElementById('send').classList.add('hidden');
+    document.getElementById('receive').classList.add('hidden');
+
+    document.getElementById(page).classList.remove('hidden');
+}
+
+function startSharing() {
+    const password = document.getElementById('sendPassword').value;
+
+    if (password.length < 4) {
+        alert('Please create a password with at least 4 characters.');
+        return;
+    }
+
+    const code = 'ALOK-' +
+        Math.random().toString(36).slice(2, 8).toUpperCase();
+
+    document.getElementById('shareCode').textContent = code;
+    document.getElementById('shareInfo').classList.remove('hidden');
+    document.getElementById('status').textContent =
+        'Demo session created. Internet sharing is not active.';
+    
+    sessionStorage.setItem('demoCode', code);
+    sessionStorage.setItem('demoPassword', password);
+}
+
+function scanQR() {
+    const file = document.getElementById('qrFile').files[0];
+
+    if (!file) {
+        alert('Please select a QR image from your gallery.');
+        return;
+    }
+
+    document.getElementById('qrResult').classList.remove('hidden');
+    alert('Image selected. QR decoding will be added in the next step.');
+}
+
+function connectDevice() {
+    const code = document.getElementById('receivedCode').value.trim();
+    const password = document.getElementById('receivePassword').value;
+
+    if (!code || !password) {
+        alert('Enter the sharing code and password.');
+        return;
+    }
+
+    document.getElementById('receiveStatus').textContent =
+        'Demo only: a real connection requires a server and networking system.';
+}
+</script>
+
+</body>
+  </html>
