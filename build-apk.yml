@@ -1,4 +1,4 @@
-name: Build Alok NetShare APK
+Build Alok NetShare APK
 
 on:
   push:
